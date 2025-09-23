@@ -13,6 +13,10 @@ const starsContainerStyle = {
 const textStyle = {
 	lineHeight: '1',
 	margin: '0',
+	fontSize: '21px',
+	fontFamily:
+		"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+	fontWeight: '500',
 };
 
 export default function StarRating({ maxStars = 5 }) {
@@ -48,8 +52,8 @@ export default function StarRating({ maxStars = 5 }) {
 }
 
 const starStyle = {
-	width: '48px',
-	height: '48px',
+	width: '42px',
+	height: '42px',
 	cursor: 'pointer',
 	display: 'block',
 };
