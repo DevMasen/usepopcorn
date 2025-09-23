@@ -54,6 +54,19 @@ export default function App() {
 				<SearchBar />
 				<NumResults movies={movies} />
 			</NavBar>
+
+			{/* using Component Composition with normal props */}
+			{/*
+				<Box element={<MoviesList movies={movies} />} />
+				<Box
+					element={
+						<>
+							<Summary watched={watched} />
+							<WatchedMoviesList watched={watched} />
+						</>
+					}
+				/> */}
+
 			<Main>
 				<Box>
 					<MoviesList movies={movies} />
