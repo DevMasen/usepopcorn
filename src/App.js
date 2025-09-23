@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Children, useState } from 'react';
 
 const tempMovieData = [
 	{
@@ -43,25 +43,32 @@ const tempWatchedData = [
 ];
 
 const average = arr =>
-	arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+	arr.reduce((acc, cur, __, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
 	const [movies, setMovies] = useState(tempMovieData);
 
 	return (
 		<>
-			<NavBar movies={movies} />
-			<Main movies={movies} />
+			<NavBar>
+				<SearchBar />
+				<NumResults movies={movies} />
+			</NavBar>
+			<Main>
+				<MoviesBox>
+					<MoviesList movies={movies} />
+				</MoviesBox>
+				<WatchedBox />
+			</Main>
 		</>
 	);
 }
 
-function NavBar({ movies }) {
+function NavBar({ children }) {
 	return (
 		<nav className="nav-bar">
 			<Logo />
-			<SearchBar />
-			<NumResults movies={movies} />
+			{children}
 		</nav>
 	);
 }
@@ -97,22 +104,16 @@ function NumResults({ movies }) {
 	);
 }
 
-function Main({ movies }) {
-	return (
-		<main className="main">
-			<LeftBox movies={movies} />
-			<RightBox />
-		</main>
-	);
+function Main({ children }) {
+	return <main className="main">{children}</main>;
 }
 
-function LeftBox({ movies }) {
-	const [isOpen1, setIsOpen1] = useState(true);
-
+function MoviesBox({ children }) {
+	const [isOpen, setIsOpen] = useState(true);
 	return (
 		<div className="box">
-			<Button isOpen={isOpen1} onIsOpen={setIsOpen1} />
-			{isOpen1 && <MoviesList movies={movies} />}
+			<Button isOpen={isOpen} onIsOpen={setIsOpen} />
+			{isOpen && children}
 		</div>
 	);
 }
@@ -149,13 +150,13 @@ function Movie({ movie }) {
 	);
 }
 
-function RightBox() {
-	const [isOpen2, setIsOpen2] = useState(true);
+function WatchedBox() {
+	const [isOpen, setIsOpen] = useState(true);
 	const [watched, setWatched] = useState(tempWatchedData);
 	return (
 		<div className="box">
-			<Button isOpen={isOpen2} onIsOpen={setIsOpen2} />
-			{isOpen2 && (
+			<Button isOpen={isOpen} onIsOpen={setIsOpen} />
+			{isOpen && (
 				<>
 					<Summary watched={watched} />
 					<WatchedMoviesList watched={watched} />
