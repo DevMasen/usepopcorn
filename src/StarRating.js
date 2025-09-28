@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const starRatingContainerStyle = {
 	display: 'flex',
@@ -8,6 +9,18 @@ const starRatingContainerStyle = {
 
 const starsContainerStyle = {
 	display: 'flex',
+};
+
+//! Using PropTypes for type checking
+StarRating.propTypes = {
+	// maxStars: PropTypes.number.isRequired,
+	maxStars: PropTypes.number,
+	color: PropTypes.string,
+	size: PropTypes.number,
+	className: PropTypes.string,
+	messages: PropTypes.array,
+	defaultRating: PropTypes.number,
+	onMovieRating: PropTypes.func,
 };
 
 export default function StarRating({
