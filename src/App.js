@@ -51,7 +51,8 @@ const apiKey = process.env.REACT_APP_API_KEY;
 export default function App() {
 	const [movies, setMovies] = useState([]);
 	const [watched] = useState([]);
-	const query = 'Interstellar';
+	const [isLoading, setIsLoading] = useState(false);
+	const query = 'fury';
 
 	// The wrong way to use the fetch API in react
 	/*
@@ -79,12 +80,14 @@ export default function App() {
 	// Fetching Data with async await and useEffect
 	useEffect(function () {
 		async function fetchMovie() {
+			setIsLoading(true);
 			const res = await fetch(
 				`http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`
 			);
 			const data = await res.json();
 			setMovies(data.Search);
-			console.log(data.Search);
+			// console.log(data.Search);
+			setIsLoading(false);
 		}
 		fetchMovie();
 	}, []);
@@ -112,7 +115,7 @@ export default function App() {
 
 			<Main>
 				<Box>
-					<MoviesList movies={movies} />
+					{isLoading ? <Loader /> : <MoviesList movies={movies} />}
 				</Box>
 				<Box>
 					<Summary watched={watched} />
@@ -206,6 +209,14 @@ function Movie({ movie }) {
 				</p>
 			</div>
 		</li>
+	);
+}
+
+function Loader() {
+	return (
+		<div className="loader-container">
+			<div className="loader"></div>
+		</div>
 	);
 }
 
