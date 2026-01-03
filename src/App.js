@@ -51,6 +51,7 @@ const apiKey = process.env.REACT_APP_API_KEY;
 export default function App() {
 	const [movies, setMovies] = useState([]);
 	const [watched] = useState([]);
+	const query = 'Interstellar';
 
 	// The wrong way to use the fetch API in react
 	/*
@@ -61,8 +62,9 @@ export default function App() {
 
 	// Use Effect hook for handle the fetch Effect
 	// This Effect function executes just once at initial render
+	/*
 	useEffect(function () {
-		fetch(`http://www.omdbapi.com/?apikey=${apiKey}&s=fury`)
+		fetch(`http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`)
 			.then(res => res.json())
 			.then(data => {
 				setMovies(data.Search);
@@ -71,6 +73,20 @@ export default function App() {
 
 		// an effect should return a cleanup function
 		return () => console.log('Clean Up!');
+	}, []);
+	*/
+
+	// Fetching Data with async await and useEffect
+	useEffect(function () {
+		async function fetchMovie() {
+			const res = await fetch(
+				`http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`
+			);
+			const data = await res.json();
+			setMovies(data.Search);
+			console.log(data.Search);
+		}
+		fetchMovie();
 	}, []);
 
 	//! Effects(useEffect) actually used to synchronize component data with an external system(movie API in example above).
