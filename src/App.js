@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+/*
 const tempMovieData = [
 	{
 		imdbID: 'tt1375666',
@@ -41,6 +42,7 @@ const tempWatchedData = [
 		userRating: 9,
 	},
 ];
+*/
 
 const average = arr =>
 	arr.reduce((acc, cur, __, arr) => acc + cur / arr.length, 0);
@@ -66,7 +68,12 @@ export default function App() {
 				setMovies(data.Search);
 				console.log(data);
 			});
+
+		// an effect should return a cleanup function
+		return () => console.log('Clean Up!');
 	}, []);
+
+	//! Effects(useEffect) actually used to synchronize component data with an external system(movie API in example above).
 
 	return (
 		<>
