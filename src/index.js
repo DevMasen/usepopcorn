@@ -37,12 +37,3 @@ root.render(
 		{/* <Test /> */}
 	</React.StrictMode>
 );
-
-//! Documents
-
-/*
-Component Instance lifecycle:
-1: Mount (initial render)
-2: Re-render (state changes, Props change, Parent re-renders, Context changes)
-3: Unmount
-*/

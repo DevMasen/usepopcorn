@@ -44,10 +44,17 @@ const tempWatchedData = [
 
 const average = arr =>
 	arr.reduce((acc, cur, __, arr) => acc + cur / arr.length, 0);
+const apiKey = process.env.REACT_APP_API_KEY;
 
 export default function App() {
 	const [movies] = useState(tempMovieData);
 	const [watched] = useState(tempWatchedData);
+
+	// The wrong way to use the fetch API in react
+	fetch(`http://www.omdbapi.com/?apikey=${apiKey}&s=interstellar`)
+		.then(res => res.json())
+		.then(data => console.log(data));
+
 	return (
 		<>
 			<NavBar>
@@ -227,3 +234,12 @@ function WatchedMovie({ movie }) {
 		</li>
 	);
 }
+
+//! Documents
+
+/*
+Component Instance lifecycle:
+1: Mount (initial render)
+2: Re-render (state changes, Props change, Parent re-renders, Context changes)
+3: Unmount
+*/
