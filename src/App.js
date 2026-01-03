@@ -52,6 +52,7 @@ export default function App() {
 	const [movies, setMovies] = useState([]);
 	const [watched] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState('');
 	const query = 'fury';
 
 	// The wrong way to use the fetch API in react
@@ -80,14 +81,26 @@ export default function App() {
 	// Fetching Data with async await and useEffect
 	useEffect(function () {
 		async function fetchMovie() {
-			setIsLoading(true);
-			const res = await fetch(
-				`http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`
-			);
-			const data = await res.json();
-			setMovies(data.Search);
-			// console.log(data.Search);
-			setIsLoading(false);
+			try {
+				setIsLoading(true);
+				const res = await fetch(
+					`http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`
+				);
+				if (!res.ok) {
+					throw new Error('Network Error!');
+				}
+
+				const data = await res.json();
+				if (!data.Search) {
+					throw new Error('Movie NOT Found!');
+				}
+				setMovies(data.Search);
+				// console.log(data.Search);
+			} catch (err) {
+				setError(err.message);
+			} finally {
+				setIsLoading(false);
+			}
 		}
 		fetchMovie();
 	}, []);
@@ -115,7 +128,11 @@ export default function App() {
 
 			<Main>
 				<Box>
-					{isLoading ? <Loader /> : <MoviesList movies={movies} />}
+					{/* Handling Errors on fetching movie data */}
+					{/* {isLoading ? <Loader /> : <MoviesList movies={movies} />} */}
+					{isLoading && <Loader />}
+					{!isLoading && !error && <MoviesList movies={movies} />}
+					{error && <ErrorMessage message={error} />}
 				</Box>
 				<Box>
 					<Summary watched={watched} />
@@ -218,6 +235,10 @@ function Loader() {
 			<div className="loader"></div>
 		</div>
 	);
+}
+
+function ErrorMessage({ message }) {
+	return <p className="error">⚠️{message}</p>;
 }
 
 function Summary({ watched }) {
