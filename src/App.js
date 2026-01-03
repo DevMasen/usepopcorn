@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const tempMovieData = [
 	{
@@ -47,13 +47,26 @@ const average = arr =>
 const apiKey = process.env.REACT_APP_API_KEY;
 
 export default function App() {
-	const [movies] = useState(tempMovieData);
-	const [watched] = useState(tempWatchedData);
+	const [movies, setMovies] = useState([]);
+	const [watched] = useState([]);
 
 	// The wrong way to use the fetch API in react
+	/*
 	fetch(`http://www.omdbapi.com/?apikey=${apiKey}&s=interstellar`)
 		.then(res => res.json())
 		.then(data => console.log(data));
+    */
+
+	// Use Effect hook for handle the fetch Effect
+	// This Effect function executes just once at initial render
+	useEffect(function () {
+		fetch(`http://www.omdbapi.com/?apikey=${apiKey}&s=fury`)
+			.then(res => res.json())
+			.then(data => {
+				setMovies(data.Search);
+				console.log(data);
+			});
+	}, []);
 
 	return (
 		<>
