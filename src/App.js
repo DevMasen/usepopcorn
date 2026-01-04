@@ -53,17 +53,55 @@ export default function App() {
 	const [watched] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState('');
-	const query = 'fury';
+	const [query, setQuery] = useState('');
 
-	// The wrong way to use the fetch API in react
+	// !Fetching Data with async await and useEffect
+	useEffect(
+		function () {
+			async function fetchMovie() {
+				try {
+					setIsLoading(true);
+					setError('');
+					const res = await fetch(
+						`http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`
+					);
+					if (!res.ok) {
+						throw new Error('Network Error!');
+					}
+
+					const data = await res.json();
+					if (!data.Search) {
+						throw new Error('Movie NOT Found!');
+					}
+					setMovies(data.Search);
+				} catch (err) {
+					setError(err.message);
+				} finally {
+					setIsLoading(false);
+				}
+			}
+
+			if (query.length < 3) {
+				setMovies([]);
+				setError('');
+				return;
+			}
+			fetchMovie();
+		},
+		[query]
+	);
+
+	//! Effects(useEffect) actually used to synchronize component data with an external system(movie API in example above).
+
+	// !The wrong way to use the fetch API in react
 	/*
 	fetch(`http://www.omdbapi.com/?apikey=${apiKey}&s=interstellar`)
 		.then(res => res.json())
 		.then(data => console.log(data));
     */
 
-	// Use Effect hook for handle the fetch Effect
-	// This Effect function executes just once at initial render
+	// !Use Effect hook for handle the fetch Effect
+	// !This Effect function executes just once at initial render
 	/*
 	useEffect(function () {
 		fetch(`http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`)
@@ -78,43 +116,31 @@ export default function App() {
 	}, []);
 	*/
 
-	// Fetching Data with async await and useEffect
+	//! Test useEffect Dependency Array
+	/*
 	useEffect(function () {
-		async function fetchMovie() {
-			try {
-				setIsLoading(true);
-				const res = await fetch(
-					`http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`
-				);
-				if (!res.ok) {
-					throw new Error('Network Error!');
-				}
-
-				const data = await res.json();
-				if (!data.Search) {
-					throw new Error('Movie NOT Found!');
-				}
-				setMovies(data.Search);
-				// console.log(data.Search);
-			} catch (err) {
-				setError(err.message);
-			} finally {
-				setIsLoading(false);
-			}
-		}
-		fetchMovie();
+		console.log('I run after every RENDER');
+	});
+	useEffect(function () {
+		console.log('I run just at Initial RENDER');
 	}, []);
-
-	//! Effects(useEffect) actually used to synchronize component data with an external system(movie API in example above).
+	useEffect(
+		function () {
+			console.log('I run just when query is changed');
+		},
+		[query]
+	);
+	console.log('I run during RENDER');
+	*/
 
 	return (
 		<>
 			<NavBar>
-				<SearchBar />
+				<SearchBar query={query} setQuery={setQuery} />
 				<NumResults movies={movies} />
 			</NavBar>
 
-			{/* using Component Composition with normal props */}
+			{/* //!using Component Composition with normal props */}
 			{/*
 				<Box element={<MoviesList movies={movies} />} />
 				<Box
@@ -128,7 +154,7 @@ export default function App() {
 
 			<Main>
 				<Box>
-					{/* Handling Errors on fetching movie data */}
+					{/* //! Handling Errors on fetching movie data */}
 					{/* {isLoading ? <Loader /> : <MoviesList movies={movies} />} */}
 					{isLoading && <Loader />}
 					{!isLoading && !error && <MoviesList movies={movies} />}
@@ -161,9 +187,7 @@ function Logo() {
 	);
 }
 
-function SearchBar() {
-	const [query, setQuery] = useState('');
-
+function SearchBar({ query, setQuery }) {
 	return (
 		<input
 			className="search"
