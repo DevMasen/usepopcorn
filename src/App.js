@@ -305,9 +305,24 @@ function WatchedMovie({ movie }) {
 
 //! Documents
 
-/*
-Component Instance lifecycle:
-1: Mount (initial render)
-2: Re-render (state changes, Props change, Parent re-renders, Context changes)
-3: Unmount
+/* //! Component Instance lifecycle:
+1:  Mount (initial render)
+2:  Commit 
+3:  Browser Paint
+4:  Effect
+5:  Prop/State change
+6:  Re-render
+7:  Commit 
+8:  Layout Effect
+9:  Browser Paint
+10: ---
+11: Effect
+12: Unmount
+13: ---
+*/
+
+/* //! Use Effect Dependency Array: 
+1: useEffect(fn,[stateA, propA, stateB]) => Effect executes after initial render and these state and prop change
+2: useEffect(fn,[]) => Effect executes just ones at initial render
+3: useEffect(fn) => Effect executes during initial render and every re-render
 */
