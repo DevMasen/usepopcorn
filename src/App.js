@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-
+import { use, useEffect, useState } from 'react';
+import StarRating from './StarRating';
 /*
 const tempMovieData = [
 	{
@@ -96,6 +96,13 @@ export default function App() {
 			fetchMovie();
 		},
 		[query]
+	);
+
+	useEffect(
+		function () {
+			console.log(movies);
+		},
+		[movies]
 	);
 
 	//! Effects(useEffect) actually used to synchronize component data with an external system(movie API in example above).
@@ -278,14 +285,84 @@ function Movie({ movie, onMovieDetails }) {
 }
 
 function MovieDetails({ selectedId, onCloseDetails }) {
+	const [movie, setMovie] = useState({});
+	const [error, setError] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
+	const {
+		Title: title,
+		Poster: poster,
+		Runtime: runtime,
+		imdbRating,
+		Plot: plot,
+		Released: released,
+		Actors: actors,
+		Director: director,
+		Genre: genre,
+	} = movie;
+
+	useEffect(
+		function () {
+			async function getMovieDetails() {
+				try {
+					setIsLoading(true);
+					const res = await fetch(
+						`http://www.omdbapi.com/?apikey=${apiKey}&i=${selectedId}`
+					);
+					if (!res.ok) {
+						throw new Error('Network Error!');
+					}
+					const data = await res.json();
+					if (data.Response === 'False') {
+						throw new Error('Details NOT found!');
+					}
+					setMovie(data);
+				} catch (err) {
+					setError(err.message);
+					console.log(err);
+				} finally {
+					setIsLoading(false);
+				}
+			}
+			getMovieDetails();
+		},
+		[selectedId]
+	);
+
 	return (
 		<>
-			<div className="details">
-				<button className="btn-back" onClick={onCloseDetails}>
-					&larr;
-				</button>
-				{selectedId}
-			</div>
+			{!error && !isLoading && (
+				<div className="details">
+					<header>
+						<button className="btn-back" onClick={onCloseDetails}>
+							&larr;
+						</button>
+						<img src={poster} alt={`Movie ${title} Poster`} />
+						<div className="details-overview">
+							<h2>{title}</h2>
+							<p>
+								{released} &bull; {runtime}
+							</p>
+							<p>{genre}</p>
+							<p>
+								<span>⭐</span>
+								{imdbRating} IMBD rating
+							</p>
+						</div>
+					</header>
+					<section>
+						<div className="rating">
+							<StarRating size={24} maxStars={10} />
+						</div>
+						<p>
+							<em>{plot}</em>
+						</p>
+						<p>Starring {actors}</p>
+						<p>Directed by {director}</p>
+					</section>
+				</div>
+			)}
+			{error && <ErrorMessage message={error} />}
+			{isLoading && <Loader />}
 		</>
 	);
 }
