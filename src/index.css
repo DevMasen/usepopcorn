@@ -229,7 +229,7 @@ body {
 	border: none;
 	background-color: var(--color-red);
 	color: var(--color-background-900);
-	font-size: 0.9rem;
+	font-size: 1.5rem;
 	font-weight: bold;
 	cursor: pointer;
 	transition: all 0.3s;
@@ -266,6 +266,9 @@ body {
 	display: flex;
 	align-items: center;
 	gap: 0.8rem;
+}
+.summary span {
+	font-size: 14px;
 }
 
 /* ******* */
@@ -320,6 +323,11 @@ body {
 	display: flex;
 	flex-direction: column;
 	gap: 2.4rem;
+}
+
+.watched-alert {
+	text-align: center;
+	font-size: 18px;
 }
 
 .btn-add {
