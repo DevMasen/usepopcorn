@@ -14,11 +14,18 @@ export default function App() {
 	const [selectedId, setSelectedId] = useState(null);
 
 	function handleMovieDetails(id) {
-		setSelectedId(curId => (curId === id ? null : id));
+		setSelectedId(curId => {
+			//! reset documet title
+			if (curId === id) document.title = 'usePopcorn';
+			return curId === id ? null : id;
+		});
 	}
 
 	function handleCloseDetails() {
 		setSelectedId(null);
+
+		//! reset documet title
+		document.title = 'usePopcorn';
 	}
 
 	function handleSetWatched(movie) {
@@ -65,13 +72,6 @@ export default function App() {
 			fetchMovie();
 		},
 		[query]
-	);
-
-	useEffect(
-		function () {
-			console.log(movies);
-		},
-		[movies]
 	);
 
 	//! Effects(useEffect) actually used to synchronize component data with an external system(movie API in example above).
@@ -332,6 +332,14 @@ function MovieDetails({ selectedId, onCloseDetails, watched, onSetWatched }) {
 			}
 		},
 		[selectedId, watched, userRating]
+	);
+
+	useEffect(
+		function () {
+			if (!title) return;
+			document.title = `Movie | ${title}`;
+		},
+		[title]
 	);
 
 	return (
