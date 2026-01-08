@@ -501,10 +501,10 @@ function WatchedMovie({ movie, onDeleteWatched }) {
 7:  Commit 
 8:  Layout Effect
 9:  Browser Paint
-10: ---
+10: Cleanup
 11: Effect
 12: Unmount
-13: ---
+13: Cleanup
 */
 
 /* //! Use Effect Dependency Array: 
