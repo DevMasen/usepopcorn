@@ -57,8 +57,8 @@ export default function App() {
 
 	function handleMovieDetails(id) {
 		setSelectedId(curId => {
-			//! reset documet title
-			if (curId === id) document.title = 'usePopcorn';
+			//! reset documet title (first solotion NOT GOOD!)
+			// if (curId === id) document.title = 'usePopcorn';
 			return curId === id ? null : id;
 		});
 	}
@@ -66,8 +66,8 @@ export default function App() {
 	function handleCloseDetails() {
 		setSelectedId(null);
 
-		//! reset documet title
-		document.title = 'usePopcorn';
+		//! reset documet title (first solotion NOT GOOD!)
+		// document.title = 'usePopcorn';
 	}
 
 	function handleSetWatched(movie) {
@@ -76,7 +76,7 @@ export default function App() {
 
 	function handleDeleteWatched(id) {
 		setWatched(watchedList =>
-			watchedList.filter(movie => movie.imdbID !== id)
+			watchedList.filter(movie => movie.imdbID !== id),
 		);
 	}
 
@@ -88,7 +88,7 @@ export default function App() {
 					setIsLoading(true);
 					setError('');
 					const res = await fetch(
-						`http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`
+						`http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`,
 					);
 					if (!res.ok) {
 						throw new Error('Network Error!');
@@ -113,7 +113,7 @@ export default function App() {
 			}
 			fetchMovie();
 		},
-		[query]
+		[query],
 	);
 
 	//! Effects(useEffect) actually used to synchronize component data with an external system(movie API in example above).
@@ -337,7 +337,7 @@ function MovieDetails({ selectedId, onCloseDetails, watched, onSetWatched }) {
 				try {
 					setIsLoading(true);
 					const res = await fetch(
-						`http://www.omdbapi.com/?apikey=${apiKey}&i=${selectedId}`
+						`http://www.omdbapi.com/?apikey=${apiKey}&i=${selectedId}`,
 					);
 					if (!res.ok) {
 						throw new Error('Network Error!');
@@ -357,31 +357,34 @@ function MovieDetails({ selectedId, onCloseDetails, watched, onSetWatched }) {
 			}
 			getMovieDetails();
 		},
-		[selectedId]
+		[selectedId],
 	);
 
 	useEffect(
 		function () {
 			const isMovieWatched = watched.some(
-				movie => movie.imdbID === selectedId
+				movie => movie.imdbID === selectedId,
 			);
 			setIsWatched(isMovieWatched);
 			if (isMovieWatched) {
 				const rate = watched.find(
-					movie => movie.imdbID === selectedId
+					movie => movie.imdbID === selectedId,
 				).userRating;
 				setUserRating(`${rate}`);
 			}
 		},
-		[selectedId, watched, userRating]
+		[selectedId, watched, userRating],
 	);
 
 	useEffect(
 		function () {
 			if (!title) return;
 			document.title = `Movie | ${title}`;
+			return function () {
+				document.title = 'usePopcorn';
+			};
 		},
-		[title]
+		[title],
 	);
 
 	return (
