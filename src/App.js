@@ -382,6 +382,9 @@ function MovieDetails({ selectedId, onCloseDetails, watched, onSetWatched }) {
 			document.title = `Movie | ${title}`;
 			return function () {
 				document.title = 'usePopcorn';
+
+				//! We can access the title after component unmount because of a MOTHER FOCKER called closures :>
+				console.log(`Cleanup the Movie ${title}`);
 			};
 		},
 		[title],
