@@ -72,6 +72,8 @@ export default function App() {
 				setError('');
 				return;
 			}
+
+			handleCloseDetails();
 			fetchMovie();
 
 			return function () {
@@ -315,7 +317,6 @@ function MovieDetails({ selectedId, onCloseDetails, watched, onSetWatched }) {
 					setUserRating('0');
 				} catch (err) {
 					setError(err.message);
-					console.log(err);
 				} finally {
 					setIsLoading(false);
 				}
@@ -349,11 +350,23 @@ function MovieDetails({ selectedId, onCloseDetails, watched, onSetWatched }) {
 				document.title = 'usePopcorn';
 
 				//! We can access the title after component unmount because of a MOTHER FOCKER called closures :>
-				console.log(`Cleanup the Movie ${title}`);
+				// console.log(`Cleanup the Movie ${title}`);
 			};
 		},
 		[title],
 	);
+
+	useEffect(function () {
+		function callBack(e) {
+			if (e.code === 'Escape') {
+				onCloseDetails();
+			}
+		}
+		document.addEventListener('keydown', callBack);
+		return function () {
+			document.removeEventListener('keydown', callBack);
+		};
+	});
 
 	return (
 		<>
