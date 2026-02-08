@@ -283,7 +283,7 @@ function Button({ isOpen, onIsOpen }) {
 function MoviesList({ movies, onMovieDetails }) {
 	return (
 		<ul className="list list-movies">
-			{movies?.map(movie => (
+			{movies.map(movie => (
 				<Movie
 					movie={movie}
 					key={movie.imdbID}
@@ -315,6 +315,7 @@ function MovieDetails({ selectedId, onCloseDetails, watched, onSetWatched }) {
 	const [isLoading, setIsLoading] = useState(false);
 	const [userRating, setUserRating] = useState('');
 	const [isWatched, setIsWatched] = useState(false);
+	const countRef = useRef(0);
 	const {
 		Title: title,
 		Poster: poster,
@@ -345,10 +346,18 @@ function MovieDetails({ selectedId, onCloseDetails, watched, onSetWatched }) {
 			imdbRating: Number(imdbRating),
 			userRating: Number(userRating),
 			runtime: Number(runtime.split(' ').at(0)),
+			rateDecisionCount: countRef.current,
 		};
 		onSetWatched(newWatchedMovie);
 		onCloseDetails();
 	}
+
+	useEffect(
+		function () {
+			countRef.current++;
+		},
+		[userRating],
+	);
 
 	useEffect(
 		function () {
