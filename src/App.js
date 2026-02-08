@@ -15,7 +15,9 @@ export default function App() {
 	//* Initial render the watchlist
 	// const [watched, setWatched] = useState([]);
 	const [watched, setWatched] = useState(function () {
-		const storedWatchList = localStorage.getItem('watched');
+		const storedWatchList = localStorage.getItem('watched')
+			? localStorage.getItem('watched')
+			: '[]';
 		return JSON.parse(storedWatchList);
 	});
 
@@ -352,9 +354,10 @@ function MovieDetails({ selectedId, onCloseDetails, watched, onSetWatched }) {
 		onCloseDetails();
 	}
 
+	//! NOT WORKS CORRECTLY!
 	useEffect(
 		function () {
-			countRef.current++;
+			if (userRating) countRef.current += 1;
 		},
 		[userRating],
 	);
