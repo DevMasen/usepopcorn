@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 // !Fetching Data with async await and useEffect
 //! Making some hooks into a custom hook
 const apiKey = process.env.REACT_APP_API_KEY;
-export function useMovies(query) {
+export function useMovies(query = '') {
 	const [movies, setMovies] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState('');

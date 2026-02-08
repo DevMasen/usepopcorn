@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import StarRating from './StarRating';
 import { useMovies } from './useMovies';
 import { useLocalStorageState } from './useLocalStorageState';
+import { useKey } from './useKey';
 const average = arr =>
 	arr.reduce((acc, cur, __, arr) => acc + cur / arr.length, 0);
 const apiKey = process.env.REACT_APP_API_KEY;
@@ -166,20 +167,13 @@ function SearchBar({ query, setQuery }) {
 
 	//* Access DOM elements with REF
 	const inputEl = useRef(null);
-	useEffect(
-		function () {
-			function callback(e) {
-				if (document.activeElement === inputEl.current) return;
-				if (e.code === 'Enter') {
-					inputEl.current.focus();
-					setQuery('');
-				}
-			}
-			document.addEventListener('keydown', callback);
-			return () => document.removeEventListener('keydown', callback);
-		},
-		[setQuery],
-	);
+
+	//* This is a custom hook for pressing a key
+	useKey('Enter', function () {
+		if (document.activeElement === inputEl.current) return;
+		inputEl.current.focus();
+		setQuery('');
+	});
 
 	return (
 		<input
@@ -361,17 +355,8 @@ function MovieDetails({ selectedId, onCloseDetails, watched, onSetWatched }) {
 		[title],
 	);
 
-	useEffect(function () {
-		function callBack(e) {
-			if (e.code === 'Escape') {
-				onCloseDetails();
-			}
-		}
-		document.addEventListener('keydown', callBack);
-		return function () {
-			document.removeEventListener('keydown', callBack);
-		};
-	});
+	//* This is a custom hook for pressing a key
+	useKey('Escape', onCloseDetails);
 
 	return (
 		<>
