@@ -268,6 +268,7 @@ function Movie({ movie, onMovieDetails }) {
 }
 
 function MovieDetails({ selectedId, onCloseDetails, watched, onSetWatched }) {
+	//* Updating a state with setter function is a async process E162
 	const [movie, setMovie] = useState({});
 	const [error, setError] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
