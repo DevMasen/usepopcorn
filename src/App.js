@@ -285,6 +285,16 @@ function MovieDetails({ selectedId, onCloseDetails, watched, onSetWatched }) {
 		Genre: genre,
 	} = movie;
 
+	//* Just use the react hooks in top levet code!
+
+	//! This is wrong!
+	// if (imdbRating > 8) {
+	// 	const [isTop, setIsTop] = useState(true);
+	// }
+
+	//! This is wrong
+	// if (imdbRating > 8) return <div>Top Rating</div>;
+
 	function handleAdd() {
 		const newWatchedMovie = {
 			imdbID: selectedId,
