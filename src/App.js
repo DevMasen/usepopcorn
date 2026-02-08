@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import StarRating from './StarRating';
+import { useMovies } from './useMovies';
 
 const average = arr =>
 	arr.reduce((acc, cur, __, arr) => acc + cur / arr.length, 0);
 const apiKey = process.env.REACT_APP_API_KEY;
-
 export default function App() {
-	const [movies, setMovies] = useState([]);
-	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState('');
 	const [query, setQuery] = useState('');
 	const [selectedId, setSelectedId] = useState(null);
+
+	//* This is a custom hook
+	const { movies, isLoading, error } = useMovies(query);
 
 	//* Initial render the watchlist
 	// const [watched, setWatched] = useState([]);
@@ -48,51 +48,6 @@ export default function App() {
 			watchedList.filter(movie => movie.imdbID !== id),
 		);
 	}
-
-	// !Fetching Data with async await and useEffect
-	useEffect(
-		function () {
-			const controller = new AbortController();
-			async function fetchMovie() {
-				try {
-					setIsLoading(true);
-					setError('');
-					const res = await fetch(
-						`http://www.omdbapi.com/?apikey=${apiKey}&s=${query}`,
-						{ signal: controller.signal },
-					);
-					if (!res.ok) {
-						throw new Error('Network Error!');
-					}
-
-					const data = await res.json();
-					if (!data.Search) {
-						throw new Error('Movie NOT Found!');
-					}
-					setMovies(data.Search);
-					setError('');
-				} catch (err) {
-					if (err.name !== 'AbortError') setError(err.message);
-				} finally {
-					setIsLoading(false);
-				}
-			}
-
-			if (query.length < 3) {
-				setMovies([]);
-				setError('');
-				return;
-			}
-
-			handleCloseDetails();
-			fetchMovie();
-
-			return function () {
-				controller.abort();
-			};
-		},
-		[query],
-	);
 
 	//* Save user watchlist in browser local storage : option 2
 	useEffect(
