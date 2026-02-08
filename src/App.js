@@ -7,11 +7,17 @@ const apiKey = process.env.REACT_APP_API_KEY;
 
 export default function App() {
 	const [movies, setMovies] = useState([]);
-	const [watched, setWatched] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState('');
 	const [query, setQuery] = useState('');
 	const [selectedId, setSelectedId] = useState(null);
+
+	//* Initial render the watchlist
+	// const [watched, setWatched] = useState([]);
+	const [watched, setWatched] = useState(function () {
+		const storedWatchList = localStorage.getItem('watched');
+		return JSON.parse(storedWatchList);
+	});
 
 	function handleMovieDetails(id) {
 		setSelectedId(curId => {
@@ -30,6 +36,9 @@ export default function App() {
 
 	function handleSetWatched(movie) {
 		setWatched(watchedList => [...watchedList, movie]);
+
+		//* Save user watchlist in browser local storage : option 1
+		// localStorage.setItem('watched', JSON.stringify([...watched, movie]));
 	}
 
 	function handleDeleteWatched(id) {
@@ -81,6 +90,14 @@ export default function App() {
 			};
 		},
 		[query],
+	);
+
+	//* Save user watchlist in browser local storage : option 2
+	useEffect(
+		function () {
+			localStorage.setItem('watched', JSON.stringify(watched));
+		},
+		[watched],
 	);
 
 	//! Effects(useEffect) actually used to synchronize component data with an external system(movie API in example above).
