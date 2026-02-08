@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import StarRating from './StarRating';
 import { useMovies } from './useMovies';
-
+import { useLocalStorageState } from './useLocalStorageState';
 const average = arr =>
 	arr.reduce((acc, cur, __, arr) => acc + cur / arr.length, 0);
 const apiKey = process.env.REACT_APP_API_KEY;
@@ -9,17 +9,11 @@ export default function App() {
 	const [query, setQuery] = useState('');
 	const [selectedId, setSelectedId] = useState(null);
 
-	//* This is a custom hook
+	//* This is a custom hook for fetching movie list
 	const { movies, isLoading, error } = useMovies(query);
 
-	//* Initial render the watchlist
-	// const [watched, setWatched] = useState([]);
-	const [watched, setWatched] = useState(function () {
-		const storedWatchList = localStorage.getItem('watched')
-			? localStorage.getItem('watched')
-			: '[]';
-		return JSON.parse(storedWatchList);
-	});
+	//* This is a custom hook for store data in localstorage
+	const [watched, setWatched] = useLocalStorageState([], 'watched');
 
 	function handleMovieDetails(id) {
 		setSelectedId(curId => {
@@ -48,14 +42,6 @@ export default function App() {
 			watchedList.filter(movie => movie.imdbID !== id),
 		);
 	}
-
-	//* Save user watchlist in browser local storage : option 2
-	useEffect(
-		function () {
-			localStorage.setItem('watched', JSON.stringify(watched));
-		},
-		[watched],
-	);
 
 	//! Effects(useEffect) actually used to synchronize component data with an external system(movie API in example above).
 
