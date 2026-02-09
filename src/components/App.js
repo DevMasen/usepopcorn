@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useMovies } from './useMovies';
-import { useLocalStorageState } from './useLocalStorageState';
+import { useMovies } from '../hooks/useMovies';
+import { useLocalStorageState } from '../hooks/useLocalStorageState';
 import NavBar from './NavBar';
 import SearchBar from './SearchBar';
 import NumResults from './NumResults';

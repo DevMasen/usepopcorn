@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useKey } from './useKey';
+import { useKey } from '../hooks/useKey';
 export default function SearchBar({ query, setQuery }) {
 	//* Focus on search bar with DOM manipulation (NOT Good!)
 	// useEffect(function () {

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useKey } from './useKey';
+import { useKey } from '../hooks/useKey';
 import StarRating from './StarRating';
 import Loader from './Loader';
 import ErrorMessage from './ErrorMessage';
